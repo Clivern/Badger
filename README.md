@@ -40,6 +40,6 @@ We are an open source, community-driven project so please feel free to join us. 
 
 ### License
 
-© 2023, Clivern. Released under [MIT License](https://opensource.org/licenses/mit-license.php).
+© 2025, Clivern. Released under [MIT License](https://opensource.org/licenses/mit-license.php).
 
 **Badger** is authored and maintained by [@Clivern](http://github.com/Clivern).
