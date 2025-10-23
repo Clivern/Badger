@@ -10,19 +10,19 @@
 
 @layer components {
   .btn-primary {
-    @apply px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors duration-200;
+    @apply px-5 py-2.5 bg-gray-900 text-white text-sm hover:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-900 transition-colors;
   }
 
   .btn-secondary {
-    @apply px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-colors duration-200;
+    @apply px-5 py-2.5 border border-gray-300 text-gray-700 text-sm hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-gray-300 transition-colors;
   }
 
   .input-field {
-    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200;
+    @apply w-full px-4 py-2.5 border border-gray-300 text-sm focus:outline-none focus:border-gray-900 transition-colors;
   }
 
   .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6;
+    @apply bg-white border border-gray-200 p-6;
   }
 }
 

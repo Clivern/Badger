@@ -1,26 +1,20 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-primary-100 px-4">
-    <div class="max-w-md w-full space-y-8">
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div class="max-w-md w-full">
       <!-- Logo and Header -->
-      <div class="text-center">
+      <div class="text-center mb-12">
         <div class="flex justify-center mb-6">
-          <img src="/logo.png" alt="Badger Logo" class="h-20 w-auto">
+          <img src="/logo.png" alt="Badger Logo" class="h-32 w-auto">
         </div>
-        <h2 class="text-3xl font-bold text-gray-900">
-          Badger
-        </h2>
-        <p class="mt-2 text-sm text-gray-600">
-          Fast, Secure MCP Gateway & Registry
-        </p>
       </div>
 
       <!-- Login Form -->
-      <div class="card">
+      <div class="bg-white border border-gray-200 p-8">
         <form class="space-y-6" @submit.prevent="handleLogin">
           <!-- Username Field -->
           <div>
-            <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
-              Username
+            <label for="username" class="block text-xs text-gray-500 mb-2">
+              USERNAME
             </label>
             <input
               id="username"
@@ -35,8 +29,8 @@
 
           <!-- Password Field -->
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-              Password
+            <label for="password" class="block text-xs text-gray-500 mb-2">
+              PASSWORD
             </label>
             <input
               id="password"
@@ -56,41 +50,32 @@
                 id="remember-me"
                 v-model="form.rememberMe"
                 type="checkbox"
-                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                class="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300"
               >
-              <label for="remember-me" class="ml-2 block text-sm text-gray-700">
+              <label for="remember-me" class="ml-2 block text-sm text-gray-600">
                 Remember me
               </label>
             </div>
 
             <div class="text-sm">
-              <a href="#" class="font-medium text-primary-600 hover:text-primary-500">
+              <a href="#" class="text-gray-600 hover:text-gray-900">
                 Forgot password?
               </a>
             </div>
           </div>
 
           <!-- Error Message -->
-          <div v-if="error" class="rounded-lg bg-red-50 p-4">
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                </svg>
-              </div>
-              <div class="ml-3">
-                <p class="text-sm font-medium text-red-800">
-                  {{ error }}
-                </p>
-              </div>
-            </div>
+          <div v-if="error" class="border border-red-200 bg-red-50 p-3">
+            <p class="text-sm text-red-900">
+              {{ error }}
+            </p>
           </div>
 
           <!-- Submit Button -->
           <div>
             <button
               type="submit"
-              class="w-full btn-primary py-3 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full btn-primary py-3 disabled:opacity-50 disabled:cursor-not-allowed"
               :disabled="loading"
             >
               <span v-if="!loading">Sign in</span>
@@ -104,18 +89,11 @@
             </button>
           </div>
         </form>
-
-        <!-- Demo Credentials -->
-        <div class="mt-6 pt-6 border-t border-gray-200">
-          <p class="text-xs text-gray-500 text-center">
-            Demo: Use any username and password to login
-          </p>
-        </div>
       </div>
 
       <!-- Footer -->
-      <p class="text-center text-sm text-gray-500">
-        © 2025 Badger. All rights reserved.
+      <p class="text-center text-xs text-gray-400 mt-8">
+        © 2025 Badger
       </p>
     </div>
   </div>
