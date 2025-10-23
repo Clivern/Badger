@@ -35,16 +35,16 @@ var migrateUpCmd = &cobra.Command{
 
 		// Initialize database connection
 		dbConfig := db.Config{
-			Driver:          viper.GetString("database.driver"),
-			Host:            viper.GetString("database.host"),
-			Port:            viper.GetInt("database.port"),
-			Username:        viper.GetString("database.username"),
-			Password:        viper.GetString("database.password"),
-			Database:        viper.GetString("database.name"),
-			MaxOpenConns:    viper.GetInt("database.max_open_conns"),
-			MaxIdleConns:    viper.GetInt("database.max_idle_conns"),
-			ConnMaxLifetime: viper.GetInt("database.conn_max_lifetime"),
-			DataSource:      viper.GetString("database.datasource"),
+			Driver:          viper.GetString("app.database.driver"),
+			Host:            viper.GetString("app.database.host"),
+			Port:            viper.GetInt("app.database.port"),
+			Username:        viper.GetString("app.database.username"),
+			Password:        viper.GetString("app.database.password"),
+			Database:        viper.GetString("app.database.name"),
+			MaxOpenConns:    viper.GetInt("app.database.max_open_conns"),
+			MaxIdleConns:    viper.GetInt("app.database.max_idle_conns"),
+			ConnMaxLifetime: viper.GetInt("app.database.conn_max_lifetime"),
+			DataSource:      viper.GetString("app.database.datasource"),
 		}
 
 		conn, err := db.NewConnection(dbConfig)
@@ -86,16 +86,16 @@ var migrateDownCmd = &cobra.Command{
 
 		// Initialize database connection
 		dbConfig := db.Config{
-			Driver:          viper.GetString("database.driver"),
-			Host:            viper.GetString("database.host"),
-			Port:            viper.GetInt("database.port"),
-			Username:        viper.GetString("database.username"),
-			Password:        viper.GetString("database.password"),
-			Database:        viper.GetString("database.name"),
-			MaxOpenConns:    viper.GetInt("database.max_open_conns"),
-			MaxIdleConns:    viper.GetInt("database.max_idle_conns"),
-			ConnMaxLifetime: viper.GetInt("database.conn_max_lifetime"),
-			DataSource:      viper.GetString("database.datasource"),
+			Driver:          viper.GetString("app.database.driver"),
+			Host:            viper.GetString("app.database.host"),
+			Port:            viper.GetInt("app.database.port"),
+			Username:        viper.GetString("app.database.username"),
+			Password:        viper.GetString("app.database.password"),
+			Database:        viper.GetString("app.database.name"),
+			MaxOpenConns:    viper.GetInt("app.database.max_open_conns"),
+			MaxIdleConns:    viper.GetInt("app.database.max_idle_conns"),
+			ConnMaxLifetime: viper.GetInt("app.database.conn_max_lifetime"),
+			DataSource:      viper.GetString("app.database.datasource"),
 		}
 
 		conn, err := db.NewConnection(dbConfig)
@@ -137,16 +137,16 @@ var migrateStatusCmd = &cobra.Command{
 
 		// Initialize database connection
 		dbConfig := db.Config{
-			Driver:          viper.GetString("database.driver"),
-			Host:            viper.GetString("database.host"),
-			Port:            viper.GetInt("database.port"),
-			Username:        viper.GetString("database.username"),
-			Password:        viper.GetString("database.password"),
-			Database:        viper.GetString("database.name"),
-			MaxOpenConns:    viper.GetInt("database.max_open_conns"),
-			MaxIdleConns:    viper.GetInt("database.max_idle_conns"),
-			ConnMaxLifetime: viper.GetInt("database.conn_max_lifetime"),
-			DataSource:      viper.GetString("database.datasource"),
+			Driver:          viper.GetString("app.database.driver"),
+			Host:            viper.GetString("app.database.host"),
+			Port:            viper.GetInt("app.database.port"),
+			Username:        viper.GetString("app.database.username"),
+			Password:        viper.GetString("app.database.password"),
+			Database:        viper.GetString("app.database.name"),
+			MaxOpenConns:    viper.GetInt("app.database.max_open_conns"),
+			MaxIdleConns:    viper.GetInt("app.database.max_idle_conns"),
+			ConnMaxLifetime: viper.GetInt("app.database.conn_max_lifetime"),
+			DataSource:      viper.GetString("app.database.datasource"),
 		}
 
 		conn, err := db.NewConnection(dbConfig)

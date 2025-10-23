@@ -22,3 +22,6 @@ sync
 
 config.test.yml
 coverage.html
+
+# Binary
+badger

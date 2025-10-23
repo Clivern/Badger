@@ -14,7 +14,7 @@ import (
 
 // HealthAction handles health check requests
 func HealthAction(w http.ResponseWriter, r *http.Request) {
-	log.Info().Msg("Health check endpoint called")
+	log.Debug().Msg("Health check endpoint called")
 
 	service.WriteJSON(w, http.StatusOK, map[string]interface{}{
 		"status": "ok",

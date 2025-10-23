@@ -23,8 +23,8 @@ func SetupLogging() error {
 	var writer io.Writer
 
 	// Handle log file creation if not stdout
-	if viper.GetString("server.log.output") != "stdout" {
-		dir, _ := filepath.Split(viper.GetString("server.log.output"))
+	if viper.GetString("app.log.output") != "stdout" {
+		dir, _ := filepath.Split(viper.GetString("app.log.output"))
 
 		// Create dir
 		if !service.DirExists(dir) {
@@ -34,16 +34,16 @@ func SetupLogging() error {
 		}
 
 		// Create log file if not exists
-		if !service.FileExists(viper.GetString("server.log.output")) {
-			f, err := os.Create(viper.GetString("server.log.output"))
+		if !service.FileExists(viper.GetString("app.log.output")) {
+			f, err := os.Create(viper.GetString("app.log.output"))
 			if err != nil {
-				return fmt.Errorf("error while creating log file [%s]: %w", viper.GetString("server.log.output"), err)
+				return fmt.Errorf("error while creating log file [%s]: %w", viper.GetString("app.log.output"), err)
 			}
 			f.Close()
 		}
 
 		f, err := os.OpenFile(
-			viper.GetString("server.log.output"),
+			viper.GetString("app.log.output"),
 			os.O_APPEND|os.O_CREATE|os.O_WRONLY,
 			0775,
 		)
@@ -56,16 +56,16 @@ func SetupLogging() error {
 	}
 
 	// Set log format
-	if viper.GetString("server.log.format") == "json" {
+	if viper.GetString("app.log.format") == "json" {
 		log.Logger = zerolog.New(writer).With().Timestamp().Logger()
 	} else {
 		log.Logger = zerolog.New(zerolog.ConsoleWriter{Out: writer}).With().Timestamp().Logger()
 	}
 
 	// Set log level
-	lvl := strings.ToLower(viper.GetString("server.log.level"))
+	level := strings.ToLower(viper.GetString("app.log.level"))
 
-	switch lvl {
+	switch level {
 	case "debug":
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	case "info":

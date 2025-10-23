@@ -35,8 +35,8 @@ func Setup(Static embed.FS) http.Handler {
 	r.Use(chimiddleware.Recoverer)
 
 	// Request timeout middleware
-	if viper.GetInt("server.timeout") > 0 {
-		timeout := time.Duration(viper.GetInt("server.timeout")) * time.Second
+	if viper.GetInt("app.timeout") > 0 {
+		timeout := time.Duration(viper.GetInt("app.timeout")) * time.Second
 		r.Use(chimiddleware.Timeout(timeout))
 	}
 
@@ -54,8 +54,8 @@ func Setup(Static embed.FS) http.Handler {
 
 	// Metrics endpoint with basic auth
 	r.With(middleware.BasicAuth(
-		viper.GetString("server.metrics.username"),
-		viper.GetString("server.metrics.secret"),
+		viper.GetString("app.metrics.username"),
+		viper.GetString("app.metrics.secret"),
 	)).Get("/api/v1/_metrics", promhttp.Handler().ServeHTTP)
 
 	// Serve static files from embedded web/dist
@@ -102,7 +102,7 @@ func Setup(Static embed.FS) http.Handler {
 func Run(handler http.Handler) error {
 	// Create HTTP server
 	srv := &http.Server{
-		Addr:    fmt.Sprintf(":%s", strconv.Itoa(viper.GetInt("server.port"))),
+		Addr:    fmt.Sprintf(":%s", strconv.Itoa(viper.GetInt("app.port"))),
 		Handler: handler,
 	}
 
@@ -112,15 +112,15 @@ func Run(handler http.Handler) error {
 	// Start the server in a goroutine
 	go func() {
 		log.Info().
-			Int("port", viper.GetInt("server.port")).
-			Bool("tls", viper.GetBool("server.tls.status")).
+			Int("port", viper.GetInt("app.port")).
+			Bool("tls", viper.GetBool("app.tls.status")).
 			Msg("Starting HTTP server")
 
 		var err error
-		if viper.GetBool("server.tls.status") {
+		if viper.GetBool("app.tls.status") {
 			err = srv.ListenAndServeTLS(
-				viper.GetString("server.tls.crt_path"),
-				viper.GetString("server.tls.key_path"),
+				viper.GetString("app.tls.crt_path"),
+				viper.GetString("app.tls.key_path"),
 			)
 		} else {
 			err = srv.ListenAndServe()
