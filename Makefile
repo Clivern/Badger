@@ -97,6 +97,13 @@ vet:
 	$(go) vet $(pkgs)
 
 
+## build_web: Build the web assets.
+.PHONY: build_web
+build_web:
+	@echo ">> ============= Building Web Assets ============= <<"
+	cd web && npm run build
+
+
 ## coverage: Create HTML coverage report
 .PHONY: coverage
 coverage:
