@@ -83,9 +83,9 @@ verify:
 	$(go) mod verify
 
 
-## format: Format the code.
-.PHONY: format
-format:
+## fmt: Format the code.
+.PHONY: fmt
+fmt:
 	@echo ">> ============= Formatting Code ============= <<"
 	$(go) fmt $(pkgs)
 
