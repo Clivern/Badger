@@ -6,7 +6,9 @@ package config
 
 import (
 	"context"
+	"embed"
 	"fmt"
+	"io/fs"
 	"net/http"
 	"os"
 	"os/signal"
@@ -24,7 +26,7 @@ import (
 )
 
 // Setup creates and configures the HTTP server
-func Setup() *gin.Engine {
+func Setup(Static embed.FS) *gin.Engine {
 	// Set Gin mode
 	if viper.GetString("server.mode") == "dev" {
 		gin.SetMode(gin.DebugMode)
@@ -60,13 +62,26 @@ func Setup() *gin.Engine {
 		c.String(http.StatusNoContent, "")
 	})
 
-	r.GET("/", api.HealthAction)
 	r.GET("/_health", api.HealthAction)
-	middleware
+
 	// Metrics endpoint with basic auth
 	r.GET("/_metrics", gin.BasicAuth(gin.Accounts{
 		viper.GetString("server.metrics.username"): viper.GetString("server.metrics.secret"),
 	}), gin.WrapH(promhttp.Handler()))
+
+	// Serve static files from embedded web/dist
+	dist, err := fs.Sub(Static, "web/dist")
+
+	if err != nil {
+		panic(fmt.Sprintf(
+			"Error while accessing dist files: %s",
+			err.Error(),
+		))
+	}
+
+	staticServer := http.StripPrefix("/", http.FileServer(http.FS(dist)))
+
+	r.NoRoute(gin.WrapH(staticServer))
 
 	return r
 }

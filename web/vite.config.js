@@ -10,7 +10,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: '../static/dashboard',
+    outDir: 'dist',
     emptyOutDir: true,
   },
   server: {

@@ -5,6 +5,8 @@
 package main
 
 import (
+	"embed"
+
 	"github.com/clivern/badger/cli"
 )
 
@@ -15,11 +17,15 @@ var (
 	builtBy = "unknown"
 )
 
+//go:embed web/dist/*
+var static embed.FS
+
 func main() {
 	cli.Version = version
 	cli.Commit = commit
 	cli.Date = date
 	cli.BuiltBy = builtBy
+	cli.Static = static
 
 	cli.Execute()
 }

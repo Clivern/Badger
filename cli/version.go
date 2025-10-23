@@ -20,10 +20,9 @@ var (
 	Date = "unknown"
 	// BuiltBy buildinfo item
 	BuiltBy = "unknown"
+	// Static embedded files
+	Static embed.FS
 )
-
-// Static embedded files
-var Static embed.FS
 
 var versionCmd = &cobra.Command{
 	Use:   "version",

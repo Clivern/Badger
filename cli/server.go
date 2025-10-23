@@ -27,7 +27,7 @@ var serverCmd = &cobra.Command{
 		}
 
 		// Setup and configure the HTTP server
-		r := conf.Setup()
+		r := conf.Setup(Static)
 
 		// Run the server
 		if err := conf.Run(r); err != nil {
