@@ -2,12 +2,12 @@
 // Use of this source code is governed by the MIT
 // license that can be found in the LICENSE file.
 
-package cmd
+package cli
 
 import (
 	"fmt"
 
-	conf "github.com/clivern/badger/internal/config"
+	conf "github.com/clivern/badger/config"
 
 	"github.com/spf13/cobra"
 )

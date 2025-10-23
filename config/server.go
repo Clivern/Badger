@@ -14,8 +14,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/clivern/badger/internal/api"
-	mid "github.com/clivern/badger/internal/middleware"
+	"github.com/clivern/badger/api"
+	"github.com/clivern/badger/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -38,10 +38,10 @@ func Setup() *gin.Engine {
 	r.Use(gin.Recovery())
 
 	// Prometheus middleware for HTTP metrics
-	r.Use(mid.PrometheusMiddleware())
+	r.Use(middleware.PrometheusMiddleware())
 
 	// Custom logger middleware
-	r.Use(mid.Logger())
+	r.Use(middleware.Logger())
 
 	// Request timeout middleware
 	r.Use(func(c *gin.Context) {
@@ -61,10 +61,10 @@ func Setup() *gin.Engine {
 	})
 
 	r.GET("/", api.HealthAction)
-	r.GET("/health", api.HealthAction)
-
+	r.GET("/_health", api.HealthAction)
+	middleware
 	// Metrics endpoint with basic auth
-	r.GET("/metrics", gin.BasicAuth(gin.Accounts{
+	r.GET("/_metrics", gin.BasicAuth(gin.Accounts{
 		viper.GetString("server.metrics.username"): viper.GetString("server.metrics.secret"),
 	}), gin.WrapH(promhttp.Handler()))
 

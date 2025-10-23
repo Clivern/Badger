@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/clivern/badger/internal/service"
+	"github.com/clivern/badger/service"
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"

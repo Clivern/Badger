@@ -2,7 +2,7 @@
 // Use of this source code is governed by the MIT
 // license that can be found in the LICENSE file.
 
-package middle
+package middleware
 
 import (
 	"net/http"
@@ -11,8 +11,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// Logger creates a new logger middleware
 func Logger() gin.HandlerFunc {
-
 	return func(c *gin.Context) {
 		// Log incoming request
 		log.Printf("Incoming Request: %s %s", c.Request.Method, c.Request.URL.String())
