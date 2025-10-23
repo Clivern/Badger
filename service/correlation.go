@@ -5,7 +5,7 @@
 package service
 
 import (
-	"github.com/satori/go.uuid"
+	"github.com/google/uuid"
 )
 
 // Correlation struct
@@ -20,6 +20,5 @@ func NewCorrelation() *Correlation {
 
 // UUIDv4 create a UUID version 4
 func (c *Correlation) UUIDv4() string {
-	u := uuid.Must(uuid.NewV4(), nil)
-	return u.String()
+	return uuid.New().String()
 }

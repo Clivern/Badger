@@ -9,25 +9,28 @@ import (
 	"testing"
 
 	"github.com/clivern/badger/pkg"
-
-	"github.com/franela/goblin"
+	"github.com/stretchr/testify/assert"
 )
 
-// TestUnitFileSystem
+// TestUnitFileSystem tests the FileSystem service
 func TestUnitFileSystem(t *testing.T) {
-	g := goblin.Goblin(t)
-
 	fs := NewFileSystem()
 
-	g.Describe("#FileSystem", func() {
-		g.It("It should satisfy test cases", func() {
-			g.Assert(fs.FileExists(fmt.Sprintf("%s/.gitignore", pkg.GetBaseDir("cache")))).Equal(true)
-			g.Assert(fs.FileExists(fmt.Sprintf("%s/not_found.md", pkg.GetBaseDir("cache")))).Equal(false)
-			g.Assert(fs.DirExists(pkg.GetBaseDir("cache"))).Equal(true)
-			g.Assert(fs.DirExists(fmt.Sprintf("%s/not_found", pkg.GetBaseDir("cache")))).Equal(false)
-			g.Assert(fs.EnsureDir(fmt.Sprintf("%s/new", pkg.GetBaseDir("cache")), 775)).Equal(nil)
-			g.Assert(fs.DirExists(fmt.Sprintf("%s/new", pkg.GetBaseDir("cache")))).Equal(true)
-			g.Assert(fs.DeleteDir(fmt.Sprintf("%s/new", pkg.GetBaseDir("cache")))).Equal(nil)
-		})
+	t.Run("FileExists should detect existing files", func(t *testing.T) {
+		assert.True(t, fs.FileExists(fmt.Sprintf("%s/.gitignore", pkg.GetBaseDir("cache"))))
+		assert.False(t, fs.FileExists(fmt.Sprintf("%s/not_found.md", pkg.GetBaseDir("cache"))))
+	})
+
+	t.Run("DirExists should detect existing directories", func(t *testing.T) {
+		assert.True(t, fs.DirExists(pkg.GetBaseDir("cache")))
+		assert.False(t, fs.DirExists(fmt.Sprintf("%s/not_found", pkg.GetBaseDir("cache"))))
+	})
+
+	t.Run("EnsureDir should create and delete directories", func(t *testing.T) {
+		newDir := fmt.Sprintf("%s/new", pkg.GetBaseDir("cache"))
+
+		assert.NoError(t, fs.EnsureDir(newDir, 0775))
+		assert.True(t, fs.DirExists(newDir))
+		assert.NoError(t, fs.DeleteDir(newDir))
 	})
 }

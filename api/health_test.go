@@ -10,26 +10,23 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/franela/goblin"
 	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
 )
 
-// TestUnitHealthEndpoint
+// TestUnitHealthEndpoint tests the health check endpoint
 func TestUnitHealthEndpoint(t *testing.T) {
-	g := goblin.Goblin(t)
+	gin.SetMode(gin.TestMode)
 
-	g.Describe("#HealthAction", func() {
-		g.It("It should satisfy all provided test cases", func() {
-			gin.SetMode(gin.TestMode)
-			w := httptest.NewRecorder()
-			c, _ := gin.CreateTestContext(w)
-			req := httptest.NewRequest(http.MethodGet, "/_health", nil)
-			c.Request = req
+	t.Run("HealthAction should return OK status", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(w)
+		req := httptest.NewRequest(http.MethodGet, "/_health", nil)
+		c.Request = req
 
-			HealthAction(c)
+		HealthAction(c)
 
-			g.Assert(w.Code).Equal(http.StatusOK)
-			g.Assert(strings.TrimSpace(w.Body.String())).Equal(`{"status":"ok"}`)
-		})
+		assert.Equal(t, http.StatusOK, w.Code)
+		assert.Equal(t, `{"status":"ok"}`, strings.TrimSpace(w.Body.String()))
 	})
 }
