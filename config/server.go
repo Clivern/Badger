@@ -8,6 +8,7 @@ import (
 	"context"
 	"embed"
 	"fmt"
+	"io"
 	"io/fs"
 	"net/http"
 	"os"
@@ -19,55 +20,43 @@ import (
 	"github.com/clivern/badger/api"
 	"github.com/clivern/badger/middleware"
 
-	"github.com/gin-gonic/gin"
+	"github.com/go-chi/chi/v5"
+	chimiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	log "github.com/sirupsen/logrus"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )
 
 // Setup creates and configures the HTTP server
-func Setup(Static embed.FS) *gin.Engine {
-	// Set Gin mode
-	if viper.GetString("server.mode") == "dev" {
-		gin.SetMode(gin.DebugMode)
-	} else {
-		gin.SetMode(gin.ReleaseMode)
-	}
-
-	r := gin.New()
+func Setup(Static embed.FS) http.Handler {
+	r := chi.NewRouter()
 
 	// Recover middleware
-	r.Use(gin.Recovery())
-
-	// Prometheus middleware for HTTP metrics
-	r.Use(middleware.PrometheusMiddleware())
-
-	// Custom logger middleware
-	r.Use(middleware.Logger())
+	r.Use(chimiddleware.Recoverer)
 
 	// Request timeout middleware
-	r.Use(func(c *gin.Context) {
-		timeoutCtx, _ := c.Request.Context(), func() {}
-		if viper.GetInt("server.timeout") > 0 {
-			var cancelFn func()
-			timeoutCtx, cancelFn = c.Request.Context(), func() {}
-			_ = cancelFn
-		}
-		c.Request = c.Request.WithContext(timeoutCtx)
-		c.Next()
-	})
+	if viper.GetInt("server.timeout") > 0 {
+		timeout := time.Duration(viper.GetInt("server.timeout")) * time.Second
+		r.Use(chimiddleware.Timeout(timeout))
+	}
+
+	// Prometheus middleware for HTTP metrics
+	r.Use(middleware.PrometheusMiddleware)
+
+	// Custom logger middleware
+	r.Use(middleware.Logger)
 
 	// Routes
-	r.GET("/favicon.ico", func(c *gin.Context) {
-		c.String(http.StatusNoContent, "")
+	r.Get("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
 	})
-
-	r.GET("/_health", api.HealthAction)
+	r.Get("/api/v1/_health", api.HealthAction)
 
 	// Metrics endpoint with basic auth
-	r.GET("/_metrics", gin.BasicAuth(gin.Accounts{
-		viper.GetString("server.metrics.username"): viper.GetString("server.metrics.secret"),
-	}), gin.WrapH(promhttp.Handler()))
+	r.With(middleware.BasicAuth(
+		viper.GetString("server.metrics.username"),
+		viper.GetString("server.metrics.secret"),
+	)).Get("/api/v1/_metrics", promhttp.Handler().ServeHTTP)
 
 	// Serve static files from embedded web/dist
 	dist, err := fs.Sub(Static, "web/dist")
@@ -79,19 +68,42 @@ func Setup(Static embed.FS) *gin.Engine {
 		))
 	}
 
-	staticServer := http.StripPrefix("/", http.FileServer(http.FS(dist)))
+	// Serve static assets (CSS, JS, images, etc.)
+	r.Handle("/assets/*", http.StripPrefix("/", http.FileServer(http.FS(dist))))
+	r.Handle("/logo.png", http.StripPrefix("/", http.FileServer(http.FS(dist))))
 
-	r.NoRoute(gin.WrapH(staticServer))
+	// SPA fallback: serve index.html for all other routes
+	// This allows Vue Router to handle client-side routing
+	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
+		// Read index.html from embedded filesystem
+		indexFile, err := dist.Open("index.html")
+		if err != nil {
+			http.Error(w, "Not Found", http.StatusNotFound)
+			return
+		}
+		defer indexFile.Close()
+
+		// Get file info to set proper headers
+		stat, err := indexFile.Stat()
+		if err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+		// Serve index.html
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		http.ServeContent(w, r, "index.html", stat.ModTime(), indexFile.(io.ReadSeeker))
+	})
 
 	return r
 }
 
 // Run starts the HTTP server with graceful shutdown support
-func Run(r *gin.Engine) error {
+func Run(handler http.Handler) error {
 	// Create HTTP server
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%s", strconv.Itoa(viper.GetInt("server.port"))),
-		Handler: r,
+		Handler: handler,
 	}
 
 	// Channel to listen for errors from the server
@@ -99,10 +111,10 @@ func Run(r *gin.Engine) error {
 
 	// Start the server in a goroutine
 	go func() {
-		log.WithFields(log.Fields{
-			"port": viper.GetInt("server.port"),
-			"tls":  viper.GetBool("server.tls.status"),
-		}).Info("Starting HTTP server")
+		log.Info().
+			Int("port", viper.GetInt("server.port")).
+			Bool("tls", viper.GetBool("server.tls.status")).
+			Msg("Starting HTTP server")
 
 		var err error
 		if viper.GetBool("server.tls.status") {
@@ -128,7 +140,9 @@ func Run(r *gin.Engine) error {
 	case err := <-serverErrors:
 		return fmt.Errorf("server error: %w", err)
 	case sig := <-quit:
-		log.WithField("signal", sig.String()).Info("Received shutdown signal")
+		log.Info().
+			Str("signal", sig.String()).
+			Msg("Received shutdown signal")
 
 		// Create a deadline for graceful shutdown
 		shutdownTimeout := 30 * time.Second
@@ -136,14 +150,16 @@ func Run(r *gin.Engine) error {
 		ctx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
 		defer cancel()
 
-		log.WithField("timeout", shutdownTimeout).Info("Gracefully shutting down server")
+		log.Info().
+			Dur("timeout", shutdownTimeout).
+			Msg("Gracefully shutting down server")
 
 		// Attempt graceful shutdown
 		if err := srv.Shutdown(ctx); err != nil {
 			return fmt.Errorf("server forced to shutdown: %w", err)
 		}
 
-		log.Info("Server shutdown complete")
+		log.Info().Msg("Server shutdown complete")
 	}
 
 	return nil

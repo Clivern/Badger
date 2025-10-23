@@ -7,16 +7,16 @@ package api
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
+	"github.com/clivern/badger/service"
+
+	"github.com/rs/zerolog/log"
 )
 
-// HealthAction Controller
-func HealthAction(c *gin.Context) {
+// HealthAction handles health check requests
+func HealthAction(w http.ResponseWriter, r *http.Request) {
+	log.Info().Msg("Health check endpoint called")
 
-	log.Info(`Incoming Request to Health Action`)
-
-	c.JSON(http.StatusOK, map[string]interface{}{
+	service.WriteJSON(w, http.StatusOK, map[string]interface{}{
 		"status": "ok",
 	})
 }

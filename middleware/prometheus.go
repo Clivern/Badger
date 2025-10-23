@@ -5,10 +5,10 @@
 package middleware
 
 import (
+	"net/http"
 	"strconv"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 )
@@ -50,36 +50,57 @@ var (
 	)
 )
 
-// PrometheusMiddleware creates a Gin middleware for Prometheus metrics
-func PrometheusMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
+// metricsResponseWriter wraps http.ResponseWriter to capture metrics
+type metricsResponseWriter struct {
+	http.ResponseWriter
+	statusCode int
+	size       int
+}
+
+func (mrw *metricsResponseWriter) WriteHeader(code int) {
+	mrw.statusCode = code
+	mrw.ResponseWriter.WriteHeader(code)
+}
+
+func (mrw *metricsResponseWriter) Write(b []byte) (int, error) {
+	n, err := mrw.ResponseWriter.Write(b)
+	mrw.size += n
+	return n, err
+}
+
+// PrometheusMiddleware creates a middleware for Prometheus metrics
+func PrometheusMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Skip metrics endpoint to avoid recursion
-		if c.Request.URL.Path == "/metrics" {
-			c.Next()
+		if r.URL.Path == "/api/v1/_metrics" {
+			next.ServeHTTP(w, r)
 			return
 		}
 
 		start := time.Now()
-		path := c.FullPath()
-		if path == "" {
-			path = c.Request.URL.Path
-		}
+		path := r.URL.Path
 
 		// Record request size
-		reqSize := float64(c.Request.ContentLength)
+		reqSize := float64(r.ContentLength)
 		if reqSize > 0 {
-			httpRequestSize.WithLabelValues(c.Request.Method, path).Observe(reqSize)
+			httpRequestSize.WithLabelValues(r.Method, path).Observe(reqSize)
+		}
+
+		// Wrap response writer to capture metrics
+		wrapped := &metricsResponseWriter{
+			ResponseWriter: w,
+			statusCode:     http.StatusOK,
 		}
 
 		// Process request
-		c.Next()
+		next.ServeHTTP(wrapped, r)
 
 		// Record metrics after request is processed
 		duration := time.Since(start).Seconds()
-		status := strconv.Itoa(c.Writer.Status())
+		status := strconv.Itoa(wrapped.statusCode)
 
-		httpRequestsTotal.WithLabelValues(c.Request.Method, path, status).Inc()
-		httpRequestDuration.WithLabelValues(c.Request.Method, path, status).Observe(duration)
-		httpResponseSize.WithLabelValues(c.Request.Method, path, status).Observe(float64(c.Writer.Size()))
-	}
+		httpRequestsTotal.WithLabelValues(r.Method, path, status).Inc()
+		httpRequestDuration.WithLabelValues(r.Method, path, status).Observe(duration)
+		httpResponseSize.WithLabelValues(r.Method, path, status).Observe(float64(wrapped.size))
+	})
 }

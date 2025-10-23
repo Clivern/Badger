@@ -8,17 +8,8 @@ import (
 	"os"
 )
 
-// FileSystem struct
-type FileSystem struct {
-}
-
-// NewFileSystem creates a new instance
-func NewFileSystem() *FileSystem {
-	return &FileSystem{}
-}
-
 // FileExists reports whether the named file exists
-func (fs *FileSystem) FileExists(path string) bool {
+func FileExists(path string) bool {
 	if fi, err := os.Stat(path); err == nil {
 		if fi.Mode().IsRegular() {
 			return true
@@ -29,7 +20,7 @@ func (fs *FileSystem) FileExists(path string) bool {
 }
 
 // DirExists reports whether the dir exists
-func (fs *FileSystem) DirExists(path string) bool {
+func DirExists(path string) bool {
 	if fi, err := os.Stat(path); err == nil {
 		if fi.Mode().IsDir() {
 			return true
@@ -40,7 +31,7 @@ func (fs *FileSystem) DirExists(path string) bool {
 }
 
 // EnsureDir ensures that directory exists
-func (fs *FileSystem) EnsureDir(dirName string, mode int) error {
+func EnsureDir(dirName string, mode int) error {
 	err := os.MkdirAll(dirName, os.FileMode(mode))
 
 	if err == nil || os.IsExist(err) {
@@ -51,7 +42,7 @@ func (fs *FileSystem) EnsureDir(dirName string, mode int) error {
 }
 
 // DeleteDir deletes a dir
-func (fs *FileSystem) DeleteDir(dir string) error {
+func DeleteDir(dir string) error {
 	err := os.RemoveAll(dir)
 
 	if err != nil {

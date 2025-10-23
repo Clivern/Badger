@@ -6,47 +6,42 @@ package config
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/clivern/badger/service"
 
-	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )
 
 // SetupLogging configures the logging system based on viper configuration
 func SetupLogging() error {
-	fys := service.NewFileSystem()
+	var writer io.Writer
 
 	// Handle log file creation if not stdout
 	if viper.GetString("server.log.output") != "stdout" {
 		dir, _ := filepath.Split(viper.GetString("server.log.output"))
 
 		// Create dir
-		if !fys.DirExists(dir) {
-			if err := fys.EnsureDir(dir, 0775); err != nil {
+		if !service.DirExists(dir) {
+			if err := service.EnsureDir(dir, 0775); err != nil {
 				return fmt.Errorf("directory [%s] creation failed: %w", dir, err)
 			}
 		}
 
 		// Create log file if not exists
-		if !fys.FileExists(viper.GetString("server.log.output")) {
+		if !service.FileExists(viper.GetString("server.log.output")) {
 			f, err := os.Create(viper.GetString("server.log.output"))
 			if err != nil {
 				return fmt.Errorf("error while creating log file [%s]: %w", viper.GetString("server.log.output"), err)
 			}
 			f.Close()
 		}
-	}
 
-	// Set output destination
-	if viper.GetString("server.log.output") == "stdout" {
-		log.SetOutput(os.Stdout)
-		gin.DefaultWriter = os.Stdout
-	} else {
 		f, err := os.OpenFile(
 			viper.GetString("server.log.output"),
 			os.O_APPEND|os.O_CREATE|os.O_WRONLY,
@@ -55,25 +50,36 @@ func SetupLogging() error {
 		if err != nil {
 			return fmt.Errorf("error opening log file: %w", err)
 		}
-		log.SetOutput(f)
-		gin.DefaultWriter = f
+		writer = f
+	} else {
+		writer = os.Stdout
+	}
+
+	// Set log format
+	if viper.GetString("server.log.format") == "json" {
+		log.Logger = zerolog.New(writer).With().Timestamp().Logger()
+	} else {
+		log.Logger = zerolog.New(zerolog.ConsoleWriter{Out: writer}).With().Timestamp().Logger()
 	}
 
 	// Set log level
 	lvl := strings.ToLower(viper.GetString("server.log.level"))
-	level, err := log.ParseLevel(lvl)
 
-	if err != nil {
-		level = log.InfoLevel
-	}
-
-	log.SetLevel(level)
-
-	// Set log format
-	if viper.GetString("server.log.format") == "json" {
-		log.SetFormatter(&log.JSONFormatter{})
-	} else {
-		log.SetFormatter(&log.TextFormatter{})
+	switch lvl {
+	case "debug":
+		zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	case "info":
+		zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	case "warn", "warning":
+		zerolog.SetGlobalLevel(zerolog.WarnLevel)
+	case "error":
+		zerolog.SetGlobalLevel(zerolog.ErrorLevel)
+	case "fatal":
+		zerolog.SetGlobalLevel(zerolog.FatalLevel)
+	case "panic":
+		zerolog.SetGlobalLevel(zerolog.PanicLevel)
+	default:
+		zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	}
 
 	return nil

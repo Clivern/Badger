@@ -6,21 +6,49 @@ package middleware
 
 import (
 	"net/http"
+	"time"
 
-	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
+	"github.com/rs/zerolog/log"
 )
 
+// responseWriter wraps http.ResponseWriter to capture status code
+type responseWriter struct {
+	http.ResponseWriter
+	statusCode int
+	written    int
+}
+
+func (rw *responseWriter) WriteHeader(code int) {
+	rw.statusCode = code
+	rw.ResponseWriter.WriteHeader(code)
+}
+
+func (rw *responseWriter) Write(b []byte) (int, error) {
+	n, err := rw.ResponseWriter.Write(b)
+	rw.written += n
+	return n, err
+}
+
 // Logger creates a new logger middleware
-func Logger() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// Log incoming request
-		log.Printf("Incoming Request: %s %s", c.Request.Method, c.Request.URL.String())
+func Logger(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+
+		// Wrap response writer to capture status
+		wrapped := &responseWriter{
+			ResponseWriter: w,
+			statusCode:     http.StatusOK,
+		}
 
 		// Call next handler
-		c.Next()
+		next.ServeHTTP(wrapped, r)
 
-		// Log outgoing response
-		log.Printf("Outgoing Response: %d %s", c.Writer.Status(), http.StatusText(c.Writer.Status()))
-	}
+		// Log request with response details
+		log.Info().
+			Str("method", r.Method).
+			Str("path", r.URL.Path).
+			Int("status", wrapped.statusCode).
+			Dur("duration", time.Since(start)).
+			Msg("HTTP Request")
+	})
 }
