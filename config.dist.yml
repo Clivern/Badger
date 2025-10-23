@@ -30,3 +30,20 @@ server:
     output: ${BADGER_SERVER_LOG_OUTPUT:-stdout}
     # Format can be json
     format: ${BADGER_SERVER_LOG_FORMAT:-json}
+
+# Database configs
+database:
+  # Database driver (mysql or sqlite)
+  driver: ${BADGER_DATABASE_DRIVER:-sqlite}
+  # MySQL specific configs
+  host: ${BADGER_DATABASE_HOST:-localhost}
+  port: ${BADGER_DATABASE_PORT:-3306}
+  username: ${BADGER_DATABASE_USERNAME:-root}
+  password: ${BADGER_DATABASE_PASSWORD:-root}
+  name: ${BADGER_DATABASE_NAME:-badger}
+  # Connection pool settings
+  max_open_conns: ${BADGER_DATABASE_MAX_OPEN_CONNS:-25}
+  max_idle_conns: ${BADGER_DATABASE_MAX_IDLE_CONNS:-10}
+  conn_max_lifetime: ${BADGER_DATABASE_CONN_MAX_LIFETIME:-300}
+  # SQLite specific config (path to database file)
+  datasource: ${BADGER_DATABASE_DATASOURCE:-./cache/badger.db}
