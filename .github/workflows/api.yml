@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go: ["1.24.9"]
+        go: ["1.24.9", "1.25.0"]
     name: Go ${{ matrix.go }} run
     steps:
       - uses: actions/checkout@v4
