@@ -5,9 +5,9 @@
 package cli
 
 import (
-	cfg "github.com/clivern/badger/config"
-	"github.com/clivern/badger/db"
-	"github.com/clivern/badger/migration"
+	"github.com/clivern/yun/core"
+	"github.com/clivern/yun/db"
+	"github.com/clivern/yun/migration"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -25,11 +25,11 @@ var migrateUpCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		configFile, _ := cmd.Flags().GetString("config")
 
-		if err := cfg.Load(configFile); err != nil {
+		if err := core.Load(configFile); err != nil {
 			log.Fatal().Err(err).Msg("Failed to load configuration")
 		}
 
-		if err := cfg.SetupLogging(); err != nil {
+		if err := core.SetupLogging(); err != nil {
 			log.Fatal().Err(err).Msg("Failed to setup logging")
 		}
 
@@ -76,11 +76,11 @@ var migrateDownCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		configFile, _ := cmd.Flags().GetString("config")
 
-		if err := cfg.Load(configFile); err != nil {
+		if err := core.Load(configFile); err != nil {
 			log.Fatal().Err(err).Msg("Failed to load configuration")
 		}
 
-		if err := cfg.SetupLogging(); err != nil {
+		if err := core.SetupLogging(); err != nil {
 			log.Fatal().Err(err).Msg("Failed to setup logging")
 		}
 
@@ -127,11 +127,11 @@ var migrateStatusCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		configFile, _ := cmd.Flags().GetString("config")
 
-		if err := cfg.Load(configFile); err != nil {
+		if err := core.Load(configFile); err != nil {
 			log.Fatal().Err(err).Msg("Failed to load configuration")
 		}
 
-		if err := cfg.SetupLogging(); err != nil {
+		if err := core.SetupLogging(); err != nil {
 			log.Fatal().Err(err).Msg("Failed to setup logging")
 		}
 

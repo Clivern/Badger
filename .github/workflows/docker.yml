@@ -22,7 +22,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@a64d0487d7069df33b279515d35d60fa80e2ea62
         with:
-          images: clivern/badger
+          images: clivern/yun
 
       - name: Build and push Docker image
         uses: docker/build-push-action@1ca370b3a9802c92e886402e0dd88098a2533b12

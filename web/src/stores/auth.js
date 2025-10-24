@@ -26,7 +26,7 @@ export const useAuthStore = defineStore('auth', () => {
         token.value = demoToken
         user.value = {
           username,
-          email: `${username}@badger.local`,
+          email: `${username}@yun.local`,
           role: 'admin'
         }
         localStorage.setItem('token', demoToken)
@@ -56,7 +56,7 @@ export const useAuthStore = defineStore('auth', () => {
         const tokenData = atob(token.value).split(':')
         user.value = {
           username: tokenData[0],
-          email: `${tokenData[0]}@badger.local`,
+          email: `${tokenData[0]}@yun.local`,
           role: 'admin'
         }
       } catch {

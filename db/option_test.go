@@ -52,7 +52,7 @@ func TestOptionRepository_Create(t *testing.T) {
 	repo := NewOptionRepository(conn.DB)
 
 	t.Run("Create new option successfully", func(t *testing.T) {
-		err := repo.Create("app_name", "Badger")
+		err := repo.Create("app_name", "Yun")
 		assert.NoError(t, err)
 
 		// Verify it was created
@@ -60,7 +60,7 @@ func TestOptionRepository_Create(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, opt)
 		assert.Equal(t, "app_name", opt.Key)
-		assert.Equal(t, "Badger", opt.Value)
+		assert.Equal(t, "Yun", opt.Value)
 	})
 
 	t.Run("Create option with empty value", func(t *testing.T) {
@@ -269,7 +269,7 @@ func TestOptionRepository_List(t *testing.T) {
 	t.Run("List multiple options", func(t *testing.T) {
 		// Create test data
 		testData := map[string]string{
-			"app_name":    "Badger",
+			"app_name":    "Yun",
 			"version":     "1.0.0",
 			"environment": "development",
 			"debug":       "true",

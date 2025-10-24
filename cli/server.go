@@ -7,30 +7,30 @@ package cli
 import (
 	"fmt"
 
-	conf "github.com/clivern/badger/config"
+	"github.com/clivern/yun/core"
 
 	"github.com/spf13/cobra"
 )
 
 var serverCmd = &cobra.Command{
 	Use:   "server",
-	Short: "Start the badger backend server",
+	Short: "Start the yun backend server",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Load configuration
-		if err := conf.Load(config); err != nil {
+		if err := core.Load(config); err != nil {
 			panic(err.Error())
 		}
 
 		// Setup logging
-		if err := conf.SetupLogging(); err != nil {
+		if err := core.SetupLogging(); err != nil {
 			panic(err.Error())
 		}
 
 		// Setup and configure the HTTP server
-		r := conf.Setup(Static)
+		r := core.Setup(Static)
 
 		// Run the server
-		if err := conf.Run(r); err != nil {
+		if err := core.Run(r); err != nil {
 			panic(fmt.Sprintf("Server error: %s", err.Error()))
 		}
 	},

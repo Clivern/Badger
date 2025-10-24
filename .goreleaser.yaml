@@ -44,4 +44,4 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
-project_name: badger
+project_name: yun

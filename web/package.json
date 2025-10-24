@@ -1,7 +1,7 @@
 {
-  "name": "badger-dashboard",
+  "name": "yun-dashboard",
   "version": "0.4.0",
-  "description": "Badger MCP Gateway Dashboard",
+  "description": "Yun MCP Gateway Dashboard",
   "type": "module",
   "private": true,
   "scripts": {

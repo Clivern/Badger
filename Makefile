@@ -5,7 +5,7 @@ pkgs          = ./...
 
 help: Makefile
 	@echo
-	@echo " Choose a command run in Badger:"
+	@echo " Choose a command run in Yun:"
 	@echo
 	@sed -n 's/^##//p' $< | column -t -s ':' |  sed -e 's/^/ /'
 	@echo
@@ -116,7 +116,7 @@ coverage:
 .PHONY: run
 run:
 	@echo ">> ============= Run API Server ============= <<"
-	$(go) run badger.go server -c config.dist.yml
+	$(go) run yun.go server -c config.dist.yml
 
 
 ## ci: Run all CI tests.

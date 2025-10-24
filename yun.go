@@ -7,7 +7,7 @@ package main
 import (
 	"embed"
 
-	"github.com/clivern/badger/cli"
+	"github.com/clivern/yun/cli"
 )
 
 var (

@@ -2,7 +2,7 @@
 // Use of this source code is governed by the MIT
 // license that can be found in the LICENSE file.
 
-package config
+package core
 
 import (
 	"context"
@@ -17,8 +17,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/clivern/badger/api"
-	"github.com/clivern/badger/middleware"
+	"github.com/clivern/yun/api"
+	"github.com/clivern/yun/middleware"
 
 	"github.com/go-chi/chi/v5"
 	chimiddleware "github.com/go-chi/chi/v5/middleware"

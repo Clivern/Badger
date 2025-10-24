@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 /*
-Package migration provides database migration management for Badger.
+Package migration provides database migration management for Yun.
 
 # Overview
 
@@ -16,14 +16,14 @@ with automatic driver detection.
 Create a migration manager and run migrations:
 
 	import (
-		"github.com/clivern/badger/db"
-		"github.com/clivern/badger/migration"
+		"github.com/clivern/yun/db"
+		"github.com/clivern/yun/migration"
 	)
 
 	// Connect to database
 	config := db.Config{
 		Driver:     "sqlite",
-		DataSource: "./cache/badger.db",
+		DataSource: "./cache/yun.db",
 	}
 	conn, err := db.NewConnection(config)
 	if err != nil {
@@ -49,13 +49,13 @@ Create a migration manager and run migrations:
 The easiest way to run migrations is through the CLI:
 
 	# Run all pending migrations
-	badger migrate up -c config.dist.yml
+	yun migrate up -c config.dist.yml
 
 	# Roll back the last migration
-	badger migrate down -c config.dist.yml
+	yun migrate down -c config.dist.yml
 
 	# Check migration status
-	badger migrate status -c config.dist.yml
+	yun migrate status -c config.dist.yml
 
 # Migration Structure
 

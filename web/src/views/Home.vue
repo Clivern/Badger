@@ -6,7 +6,7 @@
         <div class="flex justify-between h-16">
           <div class="flex items-center">
             <div class="flex-shrink-0 flex items-center">
-              <img src="/logo.png" alt="Badger Logo" class="h-10 w-auto">
+              <img src="/logo.png" alt="Yun Logo" class="h-10 w-auto">
             </div>
             <div class="hidden md:ml-10 md:flex md:space-x-8">
               <a href="#" class="border-primary-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">

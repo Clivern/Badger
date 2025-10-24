@@ -1,49 +1,49 @@
 # Server configs
 app:
   # Server name
-  name: ${BADGER_SERVER_NAME:-badger}
+  name: ${YUN_SERVER_NAME:-yun}
   # Env mode (dev or prod)
-  mode: ${BADGER_SERVER_MODE:-prod}
+  mode: ${YUN_SERVER_MODE:-prod}
   # HTTP port
-  port: ${BADGER_SERVER_PORT:-8000}
+  port: ${YUN_SERVER_PORT:-8000}
   # Hostname
-  hostname: ${BADGER_SERVER_HOSTNAME:-127.0.0.1}
+  hostname: ${YUN_SERVER_HOSTNAME:-127.0.0.1}
   # TLS configs
   tls:
-    status: ${BADGER_SERVER_TLS_STATUS:-off}
-    crt_path: ${BADGER_SERVER_TLS_PEMPATH:-cert/server.crt}
-    key_path: ${BADGER_SERVER_TLS_KEYPATH:-cert/server.key}
+    status: ${YUN_SERVER_TLS_STATUS:-off}
+    crt_path: ${YUN_SERVER_TLS_PEMPATH:-cert/server.crt}
+    key_path: ${YUN_SERVER_TLS_KEYPATH:-cert/server.key}
 
   # Global timeout
-  timeout: ${BADGER_SERVER_TIMEOUT:-50}
+  timeout: ${YUN_SERVER_TIMEOUT:-50}
 
   # Prometheus metrics endpoint
   metrics:
-    username: ${BADGER_SERVER_PROM_METRICS_USERNAME:-admin}
-    secret: ${BADGER_SERVER_PROM_METRICS_SECRET:-secret}
+    username: ${YUN_SERVER_PROM_METRICS_USERNAME:-admin}
+    secret: ${YUN_SERVER_PROM_METRICS_SECRET:-secret}
 
   # Log configs
   log:
     # Log level, it can be debug, info, warn, error, panic, fatal
-    level: ${BADGER_SERVER_LOG_LEVEL:-debug}
-    # Output can be stdout or abs path to log file /var/logs/badger.log
-    output: ${BADGER_SERVER_LOG_OUTPUT:-stdout}
+    level: ${YUN_SERVER_LOG_LEVEL:-debug}
+    # Output can be stdout or abs path to log file /var/logs/yun.log
+    output: ${YUN_SERVER_LOG_OUTPUT:-stdout}
     # Format can be json
-    format: ${BADGER_SERVER_LOG_FORMAT:-json}
+    format: ${YUN_SERVER_LOG_FORMAT:-json}
 
   # Database configs
   database:
     # Database driver (mysql or sqlite)
-    driver: ${BADGER_DATABASE_DRIVER:-sqlite}
+    driver: ${YUN_DATABASE_DRIVER:-sqlite}
     # MySQL specific configs
-    host: ${BADGER_DATABASE_HOST:-localhost}
-    port: ${BADGER_DATABASE_PORT:-3306}
-    username: ${BADGER_DATABASE_USERNAME:-root}
-    password: ${BADGER_DATABASE_PASSWORD:-root}
-    name: ${BADGER_DATABASE_NAME:-badger}
+    host: ${YUN_DATABASE_HOST:-localhost}
+    port: ${YUN_DATABASE_PORT:-3306}
+    username: ${YUN_DATABASE_USERNAME:-root}
+    password: ${YUN_DATABASE_PASSWORD:-root}
+    name: ${YUN_DATABASE_NAME:-yun}
     # Connection pool settings
-    max_open_conns: ${BADGER_DATABASE_MAX_OPEN_CONNS:-25}
-    max_idle_conns: ${BADGER_DATABASE_MAX_IDLE_CONNS:-10}
-    conn_max_lifetime: ${BADGER_DATABASE_CONN_MAX_LIFETIME:-300}
+    max_open_conns: ${YUN_DATABASE_MAX_OPEN_CONNS:-25}
+    max_idle_conns: ${YUN_DATABASE_MAX_IDLE_CONNS:-10}
+    conn_max_lifetime: ${YUN_DATABASE_CONN_MAX_LIFETIME:-300}
     # SQLite specific config (path to database file)
-    datasource: ${BADGER_DATABASE_DATASOURCE:-./cache/badger.db}
+    datasource: ${YUN_DATABASE_DATASOURCE:-./cache/yun.db}

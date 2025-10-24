@@ -14,11 +14,11 @@ import (
 var config string
 
 var rootCmd = &cobra.Command{
-	Use: "badger",
+	Use: "yun",
 	Short: `🐺 A Microservice For LGTM Stack Testing.
 
 If you have any suggestions, bug reports, or annoyances please report
-them to our issue tracker at <https://github.com/clivern/badger/issues>`,
+them to our issue tracker at <https://github.com/clivern/yun/issues>`,
 }
 
 // Execute runs cmd tool

@@ -13,7 +13,7 @@ import (
 
 func TestSQLiteConnection(t *testing.T) {
 	// Create a temporary SQLite database
-	tmpFile := "/tmp/test_badger.db"
+	tmpFile := "/tmp/test_yun.db"
 	defer os.Remove(tmpFile)
 
 	config := Config{

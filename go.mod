@@ -1,4 +1,4 @@
-module github.com/clivern/badger
+module github.com/clivern/yun
 
 go 1.24.9
 

@@ -2,7 +2,7 @@
 // Use of this source code is governed by the MIT
 // license that can be found in the LICENSE file.
 
-package config
+package core
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/clivern/badger/service"
+	"github.com/clivern/yun/service"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"

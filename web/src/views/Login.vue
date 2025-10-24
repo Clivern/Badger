@@ -4,7 +4,7 @@
       <!-- Logo and Header -->
       <div class="text-center mb-12">
         <div class="flex justify-center mb-6">
-          <img src="/logo.png" alt="Badger Logo" class="h-32 w-auto">
+          <img src="/logo.png" alt="Yun Logo" class="h-32 w-auto">
         </div>
       </div>
 
@@ -93,7 +93,7 @@
 
       <!-- Footer -->
       <p class="text-center text-xs text-gray-400 mt-8">
-        © 2025 Badger
+        Copyright © 2025 Yun. All rights reserved.
       </p>
     </div>
   </div>
