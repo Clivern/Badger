@@ -34,7 +34,7 @@ app:
   # Database configs
   database:
     # Database driver (mysql or sqlite)
-    driver: ${YUN_DATABASE_DRIVER:-mysql}
+    driver: ${YUN_DATABASE_DRIVER:-sqlite}
     # MySQL specific configs
     host: ${YUN_DATABASE_HOST:-localhost}
     port: ${YUN_DATABASE_PORT:-3306}
