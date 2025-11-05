@@ -1,4 +1,4 @@
-FROM golang:1.20.4
+FROM golang:1.25.4
 
 ARG MUT_VERSION=0.3.0
 
